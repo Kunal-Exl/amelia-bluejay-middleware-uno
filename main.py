@@ -21,11 +21,14 @@ def read_root():
 
 
 @app.post("/bluejay/webhook")
-async def blujay_webhook(request: Request, x_blujay_signature : str = Header(...), x_simulation_result_id: str = Header(...)):
+async def blujay_webhook(request: Request):
     raw_body = await request.body()
 
-    if not verify_bluejay_signature(raw_body, x_blujay_signature):
-        raise HTTPException(status_code=401, detail="Invalid blujay signature")
+    # if not X_blujay_signature:
+    #     raise HTTPException(status_code=401, detail="Missing Bluejay signature")
+
+    # if not verify_bluejay_signature(raw_body, X_blujay_signature):
+    #     raise HTTPException(status_code=401, detail="Invalid blujay signature")
     
     payload = await request.json()
     incoming_message = payload.get("message")
@@ -48,17 +51,60 @@ async def blujay_webhook(request: Request, x_blujay_signature : str = Header(...
         )
     
     send_message_to_bluejay(
-        simulation_result_id= x_simulation_result_id,
+        # simulation_result_id= X_simulation_result_id,
         message=bot_message,
         message_id=message_id, # this should be unique everytime i think not sure
         end_conversation=end_conversation,
         end_turn=False
     )
 
-    return {"simulation_result_id":x_simulation_result_id,
-            "status":"received",
+    return {"status":"received",
             "reply":bot_message
     }
+
+
+# @app.post("/bluejay/webhook")
+# async def blujay_webhook(request: Request, X_blujay_signature : str = Header(...), X_simulation_result_id: str = Header(...)):
+#     raw_body = await request.body()
+
+#     if not X_blujay_signature:
+#         raise HTTPException(status_code=401, detail="Missing Bluejay signature")
+
+#     if not verify_bluejay_signature(raw_body, X_blujay_signature):
+#         raise HTTPException(status_code=401, detail="Invalid blujay signature")
+    
+#     payload = await request.json()
+#     incoming_message = payload.get("message")
+#     message_id = payload.get("message_id") #I think it needs to be unique
+#     end_conversation = payload.get("end_conversation",False)
+
+#     if not incoming_message:
+#         raise HTTPException(status_code=400, detail="Missing message")
+    
+#     token = get_auth_token()
+#     session_Id = initiate_chat(token)
+#     send_result = send_message(
+#             token=token,
+#             session_Id=session_Id,
+#             message=incoming_message
+#         )
+#     bot_message = poll_response(
+#             token=token,
+#             session_Id=session_Id
+#         )
+    
+#     send_message_to_bluejay(
+#         simulation_result_id= X_simulation_result_id,
+#         message=bot_message,
+#         message_id=message_id, # this should be unique everytime i think not sure
+#         end_conversation=end_conversation,
+#         end_turn=False
+#     )
+
+#     return {"simulation_result_id":X_simulation_result_id,
+#             "status":"received",
+#             "reply":bot_message
+#     }
 
 
 @app.post("/conversation")
