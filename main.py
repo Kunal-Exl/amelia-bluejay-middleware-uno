@@ -24,11 +24,11 @@ def read_root():
 async def blujay_webhook(request: Request, X_blujay_signature : str | None = Header(default=None), X_simulation_result_id: str | None = Header(default=None)):
     raw_body = await request.body()
 
-    if not X_blujay_signature:
-        raise HTTPException(status_code=401, detail="Missing Bluejay signature")
+    # if not X_blujay_signature:
+    #     raise HTTPException(status_code=401, detail="Missing Bluejay signature")
 
-    if not verify_bluejay_signature(raw_body, X_blujay_signature):
-        raise HTTPException(status_code=401, detail="Invalid blujay signature")
+    # if not verify_bluejay_signature(raw_body, X_blujay_signature):
+    #     raise HTTPException(status_code=401, detail="Invalid blujay signature")
     
     payload = await request.json()
     incoming_message = payload.get("message")
