@@ -13,6 +13,9 @@ def verify_bluejay_signature(raw_body: bytes, received_signature: str) -> bool:
     if not secret:
         raise RuntimeError("BLUEJAY WEBHOOK SECRET not set")
     
+    if received_signature.startswith("sha256="):
+        received_signature =received_signature.replace("sha256=","")
+    
     computed = hmac.new(
         key=secret.encode("utf-8"),
         msg=raw_body,

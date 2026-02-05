@@ -1,5 +1,5 @@
 # from fastapi import FastAPI , HTTPException , Request , Header 
-# import json
+# 
 # from services.auth_service import get_auth_token
 # from services.chat_service import initiate_chat
 # from services.message_service import send_message
@@ -48,7 +48,7 @@
 #         "reply" : bot_message
 #     }
 from typing import Union
-
+import json
 from fastapi import FastAPI , HTTPException , Request , Header 
 from pydantic import BaseModel
 from services.auth_service import get_auth_token
@@ -125,7 +125,8 @@ async def blujay_webhook(request: Request, X_blujay_signature : str | None = Hea
         raise HTTPException(status_code=401, detail="Invalid blujay signature")
     
     try:
-        payload = await request.json()
+        # payload = await request.json()
+        payload = json.loads(raw_body)
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid Json");
 
