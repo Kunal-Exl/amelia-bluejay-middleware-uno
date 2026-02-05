@@ -115,7 +115,7 @@ def read_root():
 
 
 @app.post("/bluejay/webhook")
-async def blujay_webhook(request: Request, X_blujay_signature : str | None = Header(default=None), X_simulation_result_id: str | None = Header(default=None)):
+async def blujay_webhook(request: Request, X_blujay_signature : str = Header(..., alias="X-Bluejay-Signature"), X_simulation_result_id: str = Header(..., alias="X-Simulation-Result-Id")):
     print("Blujay webhook HIT")
 
     raw_body = await request.body()

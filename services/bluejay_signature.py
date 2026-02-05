@@ -10,6 +10,8 @@ load_dotenv()
 def verify_bluejay_signature(raw_body: bytes, received_signature: str) -> bool:
     secret = os.getenv("BLUEJAY_WEBHOOK_SECRET")
 
+    print("sign:",secret)
+
     if not secret:
         raise RuntimeError("BLUEJAY WEBHOOK SECRET not set")
     
