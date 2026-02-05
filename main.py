@@ -116,7 +116,13 @@ def read_root():
 
 @app.post("/bluejay/webhook")
 async def blujay_webhook(request: Request, X_blujay_signature : str | None = Header(default=None), X_simulation_result_id: str | None = Header(default=None)):
+    print("Blujay webhook HIT")
+
     raw_body = await request.body()
+    print("webhook recieved")
+    print("Signatur",X_blujay_signature)
+    print("Simualtion reult Id:", X_simulation_result_id)
+    print("Raw_body", raw_body.decode("utf-8" ,errors="ignore"))
 
     if not X_blujay_signature:
         raise HTTPException(status_code=401, detail="Missing Bluejay signature")
@@ -154,13 +160,13 @@ async def blujay_webhook(request: Request, X_blujay_signature : str | None = Hea
     #         session_Id=session_Id
     #     )
     
-    # send_message_to_bluejay(
-    #     simulation_result_id= X_simulation_result_id,
-    #     message=bot_message,
-    #     message_id=message_id, # this should be unique everytime i think not sure
-    #     end_conversation=end_conversation,
-    #     end_turn=False
-    # )
+    send_message_to_bluejay(
+        simulation_result_id= X_simulation_result_id,
+        message=bot_message,
+        message_id=message_id, # this should be unique everytime i think not sure
+        end_conversation=end_conversation,
+        end_turn=False
+    )
 
     return {"simulation_result_id":X_simulation_result_id,
             "status":"received",
