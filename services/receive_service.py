@@ -26,7 +26,7 @@ def poll_response(token: str, session_Id: str, max_retries: int = 5 ):
             )
         
         data = response.json()
-        print("DATA",data[0])
+        # print("DATA",data[0])
 
         # if data.get("messageText"):
         #     return data["messageText"]
