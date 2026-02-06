@@ -1,7 +1,7 @@
 from threading import Lock
 
 _store = {}
-_lock = Lock{}
+_lock = Lock()
 
 def get_session_id(simulation_result_id: str):
     return _store.get(simulation_result_id)

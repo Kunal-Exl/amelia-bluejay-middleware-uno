@@ -29,7 +29,7 @@ def process_with_amelia(simulation_result_id: str, message:str, end_conversation
         
         print({
             "simulation_result_id" : simulation_result_id,
-            "session_id" : session_Id
+            "session_id" : session_Id,
             "reply":bot_message
         })
 
