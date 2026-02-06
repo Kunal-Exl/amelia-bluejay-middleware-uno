@@ -161,7 +161,7 @@ async def blujay_webhook(request: Request, X_blujay_signature : str = Header(...
 
     token = get_auth_token()
     session_Id = initiate_chat(token)
-    send_result = send_message(
+    send_message(
             token=token,
             session_Id=session_Id,
             message=incoming_message
@@ -171,12 +171,16 @@ async def blujay_webhook(request: Request, X_blujay_signature : str = Header(...
             session_Id=session_Id
         )
     
+    print({
+        "reply":bot_message
+    })
+    
     send_message_to_bluejay(
         simulation_result_id= simulation_id,
         message=bot_message,
-        message_id=message_id, # this should be unique everytime i think not sure
-        end_conversation=end_conversation,
-        end_turn=False
+        message_id="12345", # this should be unique everytime i think not sure
+        end_conversation=False,
+        end_turn=True
     )
 
     return {"simulation_result_id":simulation_id,
