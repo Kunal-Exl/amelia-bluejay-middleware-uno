@@ -59,6 +59,7 @@ from services.receive_service import poll_response
 from services.bluejay_signature import verify_bluejay_signature
 from services.bluejay_send_service import send_message_to_bluejay
 from services.amelia_service import process_with_amelia
+from services.conversation_store import (get_session_id, set_session_id, clear_session)
 
 app = FastAPI()
 
@@ -80,7 +81,7 @@ def read_root():
 
 
 @app.post("/bluejay/webhook")
-async def blujay_webhook(request: Request, background_task: BackgroundTasks , X_blujay_signature : str = Header(..., alias="X-Bluejay-Signature")):
+async def blujay_webhook(request: Request, X_blujay_signature : str = Header(..., alias="X-Bluejay-Signature")):
     print("Blujay webhook HIT")
 
     raw_body = await request.body()
@@ -110,12 +111,49 @@ async def blujay_webhook(request: Request, background_task: BackgroundTasks , X_
     if not incoming_message:
         raise HTTPException(status_code=400, detail="Missing message")
     
-    background_task.add_task(
-        process_with_amelia,
-        simulation_id,
-        incoming_message,
-        end_conversation
+    # background_task.add_task(
+    #     process_with_amelia,
+    #     simulation_id,
+    #     incoming_message,
+    #     end_conversation
+    # )
+
+    token = get_auth_token()
+
+    session_Id = get_session_id(simulation_id)
+
+    if not session_Id:
+        session_Id = initiate_chat(token)
+        set_session_id(simulation_id, session_Id)
+
+    send_message(
+            token=token,
+            session_Id=session_Id,
+            message=incoming_message
+        )
+    bot_message = poll_response(
+            token=token,
+            session_Id=session_Id
+        )
+        
+    print("Amela bot reply:",bot_message)
+        
+    print({
+        "simulation_result_id" : simulation_id,
+        "session_id" : session_Id,
+        "reply":bot_message
+    })
+
+    send_message_to_bluejay(
+        simulation_result_id= simulation_id,
+        message=bot_message,
+        message_id=str(uuid.uuid4()), # this should be unique everytime i think not sure
+        end_conversation=end_conversation,
+        end_turn=False
     )
+
+    if end_conversation:
+        clear_session(simulation_id)
     
     # token = get_auth_token()
     # session_Id = initiate_chat(token)
