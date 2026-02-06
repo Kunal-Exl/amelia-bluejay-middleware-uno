@@ -147,9 +147,10 @@ async def blujay_webhook(request: Request, X_blujay_signature : str = Header(...
     send_message_to_bluejay(
         simulation_result_id= simulation_id,
         message=bot_message,
-        message_id=str(uuid.uuid4()), # this should be unique everytime i think not sure
-        end_conversation=end_conversation,
-        end_turn=False
+        # message_id="12345",  this should be unique everytime i think not sure
+        message_id=str(uuid.uuid4()),
+        end_conversation=False,
+        end_turn=True
     )
 
     if end_conversation:
