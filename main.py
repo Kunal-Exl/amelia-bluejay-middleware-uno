@@ -298,12 +298,15 @@ def conversation(request: MessageRequest):
     # token = get_auth_token()
     try:
         token = get_auth_token()
+        print("TOKEN",token)
         session_Id = initiate_chat(token)
+        print("session_Id",session_Id)
         send_result = send_message(
             token=token,
             session_Id=session_Id,
             message=request.message
         )
+        print("send_result",send_result)
         bot_message = poll_response(
             token=token,
             session_Id=session_Id
