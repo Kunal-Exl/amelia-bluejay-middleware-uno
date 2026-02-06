@@ -37,8 +37,8 @@ def poll_response(token: str, session_Id: str, max_retries: int = 5 ):
 
 
 
-        if isinstance(data, list) and len(data) > 0:
-            return data[0].get("messageText")
+        # if isinstance(data, list) and len(data) > 0:
+        #     return data[0].get("messageText")
         
         for msg in reversed(data):
             if(
