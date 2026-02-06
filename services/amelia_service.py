@@ -1,7 +1,9 @@
+import uuid
 from services.auth_service import get_auth_token
 from services.chat_service import initiate_chat
 from services.message_service import send_message
 from services.receive_service import poll_response
+from services.bluejay_send_service import send_message_to_bluejay
 from services.conversation_store import get_session_id , set_session_id , clear_session
 
 def process_with_amelia(simulation_result_id: str, message:str, end_conversation: bool = False):
@@ -32,6 +34,14 @@ def process_with_amelia(simulation_result_id: str, message:str, end_conversation
             "session_id" : session_Id,
             "reply":bot_message
         })
+
+        send_message_to_bluejay(
+            simulation_result_id= simulation_result_id,
+            message=bot_message,
+            message_id=str(uuid.uuid4()), # this should be unique everytime i think not sure
+            end_conversation=end_conversation,
+            end_turn=False
+        )
 
         if end_conversation:
             clear_session(simulation_result_id)
