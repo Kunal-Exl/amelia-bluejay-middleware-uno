@@ -9,7 +9,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 BASE_CONVERSATION_URL = os.getenv("BASE_CONVERSATION_URL")
 
-def poll_response(token: str, session_Id: str, max_retries: int = 5 ):
+def poll_response(token: str, session_Id: str, max_retries: int = 8 ):
     url = f"{BASE_CONVERSATION_URL}/{session_Id}/poll"
 
     headers = {
@@ -29,8 +29,22 @@ def poll_response(token: str, session_Id: str, max_retries: int = 5 ):
 
         # if data.get("messageText"):
         #     return data["messageText"]
-        if isinstance(data, list) and len(data) > 0:
-            return data[0].get("messageText")
+
+        if not isinstance(data, list):
+            time.sleep(1)
+            continue
+
+        for msg in reversed(data):
+            if(
+                msg.get("ameliaMessageType") == "OutboundTextMessage"
+                and msg.get("speechMessageText")
+                and msg.get("sourceUserType") == "Amelia"
+            ):
+                return msg["speachMessageText"]
+
+
+        # if isinstance(data, list) and len(data) > 0:
+        #     return data[0].get("messageText")
 
         # if isinstance(data, list):
         #     message= []
