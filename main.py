@@ -49,6 +49,7 @@
 #     }
 from typing import Union
 import json
+import uuid
 from fastapi import FastAPI , HTTPException , Request , Header 
 from pydantic import BaseModel
 from services.auth_service import get_auth_token
@@ -157,8 +158,6 @@ async def blujay_webhook(request: Request, X_blujay_signature : str = Header(...
     #     simulation_result_id= simulation_id,
     #     message=incoming_message
     # )
-
-
     token = get_auth_token()
     session_Id = initiate_chat(token)
     send_message(
@@ -178,7 +177,8 @@ async def blujay_webhook(request: Request, X_blujay_signature : str = Header(...
     send_message_to_bluejay(
         simulation_result_id= simulation_id,
         message=bot_message,
-        message_id="12345", # this should be unique everytime i think not sure
+        # message_id="12345",  this should be unique everytime i think not sure
+        message_id=str(uuid.uuid4()),
         end_conversation=False,
         end_turn=True
     )
