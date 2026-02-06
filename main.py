@@ -151,36 +151,37 @@ async def blujay_webhook(request: Request, X_blujay_signature : str = Header(...
     if not incoming_message:
         raise HTTPException(status_code=400, detail="Message Missing");
     message_id = payload.get("message_id") #I think it needs to be unique
-    #end_conversation = payload.get("end_conversation",False)
+    end_conversation = payload.get("end_conversation",False)
     
-    process_with_amelia(
-        simulation_result_id= simulation_id,
-        message=incoming_message
-    )
-
-
-    # token = get_auth_token()
-    # session_Id = initiate_chat(token)
-    # send_result = send_message(
-    #         token=token,
-    #         session_Id=session_Id,
-    #         message=incoming_message
-    #     )
-    # bot_message = poll_response(
-    #         token=token,
-    #         session_Id=session_Id
-    #     )
-    
-    # send_message_to_bluejay(
-    #     simulation_result_id= X_simulation_result_id,
-    #     message=bot_message,
-    #     message_id=message_id, # this should be unique everytime i think not sure
-    #     end_conversation=end_conversation,
-    #     end_turn=False
+    # process_with_amelia(
+    #     simulation_result_id= simulation_id,
+    #     message=incoming_message
     # )
+
+
+    token = get_auth_token()
+    session_Id = initiate_chat(token)
+    send_result = send_message(
+            token=token,
+            session_Id=session_Id,
+            message=incoming_message
+        )
+    bot_message = poll_response(
+            token=token,
+            session_Id=session_Id
+        )
+    
+    send_message_to_bluejay(
+        simulation_result_id= simulation_id,
+        message=bot_message,
+        message_id=message_id, # this should be unique everytime i think not sure
+        end_conversation=end_conversation,
+        end_turn=False
+    )
 
     return {"simulation_result_id":simulation_id,
             "status":"received",
+            "reply":bot_message
     }
 
 
