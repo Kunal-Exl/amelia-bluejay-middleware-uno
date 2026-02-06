@@ -42,4 +42,6 @@ def poll_response(token: str, session_Id: str, max_retries: int = 5 ):
 
         time.sleep(1)
 
+    print("Inside Poll Function")
+
     return[]

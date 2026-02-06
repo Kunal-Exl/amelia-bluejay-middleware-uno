@@ -27,6 +27,8 @@ def send_message(token: str, session_Id: str, message: str):
             f"SEND message failed: {response.status_code} - {response.text}"
         )
     
+    print("Inside Send Message Function")
+
     data = response.json()
 
     return data if response.text else {"status":"sent"}

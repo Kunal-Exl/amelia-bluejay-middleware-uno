@@ -23,6 +23,8 @@ def initiate_chat(token):
 
     response = requests.post(CHAT_INIT_URL ,json=payload, headers=headers , timeout=10, verify=False)
 
+    print("Inside New Chat Function")
+
     data = response.json()
 
     return data["sessionId"]

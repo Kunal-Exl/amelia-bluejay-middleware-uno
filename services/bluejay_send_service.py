@@ -26,5 +26,7 @@ def send_message_to_bluejay(simulation_result_id:str, message:str, message_id:st
 
     response = requests.post(BLUEJAY_SEND_MESSAGE_URL, json=payload, headers=headers , timeout=10)
 
+    print("Inside BLUE JAY SEND Function")
+
     response.raise_for_status()
     return response.json()

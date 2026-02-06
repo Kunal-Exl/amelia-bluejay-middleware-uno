@@ -29,6 +29,8 @@ def get_auth_token():
     
     data = response.json()
 
+    print("Inside Auth Function")
+
     return data["token"]
 
     # fake_token = "mock-auth-token-12345"
